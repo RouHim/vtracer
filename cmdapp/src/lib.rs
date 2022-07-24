@@ -10,8 +10,10 @@
 
 mod config;
 mod converter;
+mod inmemory_converter;
 mod svg;
 
 pub use config::*;
 pub use converter::*;
+pub use inmemory_converter::*;
 pub use svg::*;
