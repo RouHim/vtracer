@@ -1,5 +1,3 @@
-use image::GenericImageView;
-
 use super::svg::SvgFile;
 
 use crate::Config;
