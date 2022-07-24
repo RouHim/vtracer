@@ -1,10 +1,11 @@
 use std::path::PathBuf;
 use std::{fs::File, io::Write};
 
-use super::config::{ColorMode, Config, ConverterConfig, Hierarchical};
-use super::svg::SvgFile;
 use visioncortex::color_clusters::{Runner, RunnerConfig, HIERARCHICAL_MAX};
 use visioncortex::{Color, ColorImage, ColorName};
+
+use super::config::{ColorMode, Config, ConverterConfig, Hierarchical};
+use super::svg::SvgFile;
 
 /// Convert an image file into svg file
 pub fn convert_image_to_svg(config: Config) -> Result<(), String> {
@@ -37,7 +38,6 @@ fn color_image_to_svg(config: ConverterConfig) -> Result<(), String> {
             is_same_color_b: 1,
             deepen_diff: config.layer_difference,
             hollow_neighbours: 1,
-            key_color: Color::new(0, 0, 0),
         },
         img,
     );
@@ -60,7 +60,6 @@ fn color_image_to_svg(config: ConverterConfig) -> Result<(), String> {
                     is_same_color_b: 1,
                     deepen_diff: 0,
                     hollow_neighbours: 0,
-                    key_color: Color::new(0, 0, 0),
                 },
                 image,
             );
