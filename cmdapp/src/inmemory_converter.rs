@@ -1,11 +1,11 @@
 use image::GenericImageView;
 
-use super::config::ConverterConfig;
 use super::svg::SvgFile;
 
-use visioncortex::{BinaryImage, Color, ColorName};
 use crate::Config;
+use visioncortex::{BinaryImage, Color, ColorName};
 
+/// Converts an binary image into svg xml data string
 pub fn binary_image_to_svg(input_buffer: &BinaryImage, config: Config) -> String {
     let config = config.into_converter_config();
 
