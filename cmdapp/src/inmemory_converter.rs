@@ -1,9 +1,9 @@
-use std::path::PathBuf;
 use std::{fs::File, io::Write};
-use image::{ImageBuffer, Rgb};
+use std::path::PathBuf;
 
-use visioncortex::color_clusters::{Runner, RunnerConfig, HIERARCHICAL_MAX};
+use image::{DynamicImage, ImageBuffer, Rgb};
 use visioncortex::{BinaryImage, Color, ColorImage, ColorName};
+use visioncortex::color_clusters::{HIERARCHICAL_MAX, Runner, RunnerConfig};
 
 use super::config::{ColorMode, Config, ConverterConfig, Hierarchical};
 use super::svg::SvgFile;
@@ -39,12 +39,12 @@ pub fn binary_image_to_svg(input_buffer: &BinaryImage, config: Config) -> String
 
 
 /// Converts an color image into svg xml data string
-pub fn color_image_to_svg(input_buffer: ImageBuffer<Rgb<u8>, Vec<u8>>, config: Config) -> String {
+pub fn color_image_to_svg(input_buffer: DynamicImage, config: Config) -> String {
     let config = config.into_converter_config();
     let width = input_buffer.width() as usize;
     let height = input_buffer.height() as usize;
     let img = ColorImage {
-        pixels: input_buffer.as_raw().to_vec(),
+        pixels: input_buffer.as_rgba8().unwrap().as_raw().to_vec(),
         width,
         height,
     };
@@ -77,7 +77,7 @@ pub fn color_image_to_svg(input_buffer: ImageBuffer<Rgb<u8>, Vec<u8>>, config: C
                     hierarchical: 64,
                     batch_size: 25600,
                     good_min_area: 0,
-                    good_max_area: (image.width * image.height),
+                    good_max_area: (image.width * image.height) as usize,
                     is_same_color_a: 0,
                     is_same_color_b: 1,
                     deepen_diff: 0,
