@@ -1,11 +1,8 @@
-use std::{fs::File, io::Write};
-use std::path::PathBuf;
-
-use image::{DynamicImage, ImageBuffer, Rgb};
+use image::RgbaImage;
+use visioncortex::color_clusters::{Runner, RunnerConfig, HIERARCHICAL_MAX};
 use visioncortex::{BinaryImage, Color, ColorImage, ColorName};
-use visioncortex::color_clusters::{HIERARCHICAL_MAX, Runner, RunnerConfig};
 
-use super::config::{ColorMode, Config, ConverterConfig, Hierarchical};
+use super::config::{Config, Hierarchical};
 use super::svg::SvgFile;
 
 /// Converts an binary image into svg xml data string
@@ -37,14 +34,13 @@ pub fn binary_image_to_svg(input_buffer: &BinaryImage, config: Config) -> String
     format!("{}", svg)
 }
 
-
 /// Converts an color image into svg xml data string
-pub fn color_image_to_svg(input_buffer: DynamicImage, config: Config) -> String {
+pub fn color_image_to_svg(input_image: RgbaImage, config: Config) -> String {
     let config = config.into_converter_config();
-    let width = input_buffer.width() as usize;
-    let height = input_buffer.height() as usize;
+    let width = input_image.width() as usize;
+    let height = input_image.height() as usize;
     let img = ColorImage {
-        pixels: input_buffer.as_rgba8().unwrap().as_raw().to_vec(),
+        pixels: input_image.as_raw().to_vec(),
         width,
         height,
     };

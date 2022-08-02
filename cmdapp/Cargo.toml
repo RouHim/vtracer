@@ -13,4 +13,4 @@ keywords = ["svg", "computer-graphics"]
 [dependencies]
 clap = "3.2.14"
 image = "0.24.3"
-visioncortex = "0.6.0"
+visioncortex = "0.6.1"
