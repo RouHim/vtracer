@@ -1,5 +1,6 @@
+use crate::{find_unused_color_in_image, should_key_image};
 use image::RgbaImage;
-use visioncortex::color_clusters::{Runner, RunnerConfig, HIERARCHICAL_MAX};
+use visioncortex::color_clusters::{KeyingAction, Runner, RunnerConfig, HIERARCHICAL_MAX};
 use visioncortex::{BinaryImage, Color, ColorImage, ColorName};
 
 use super::config::{Config, Hierarchical};
@@ -39,10 +40,25 @@ pub fn color_image_to_svg(input_image: RgbaImage, config: Config) -> String {
     let config = config.into_converter_config();
     let width = input_image.width() as usize;
     let height = input_image.height() as usize;
-    let img = ColorImage {
+    let mut img = ColorImage {
         pixels: input_image.as_raw().to_vec(),
         width,
         height,
+    };
+
+    let key_color = if should_key_image(&img) {
+        let key_color = find_unused_color_in_image(&img).unwrap();
+        for y in 0..height {
+            for x in 0..width {
+                if img.get_pixel(x, y).a == 0 {
+                    img.set_pixel(x, y, &key_color);
+                }
+            }
+        }
+        key_color
+    } else {
+        // The default color is all zeroes, which is treated by visioncortex as a special value meaning no keying will be applied.
+        Color::default()
     };
 
     let runner = Runner::new(
@@ -56,6 +72,12 @@ pub fn color_image_to_svg(input_image: RgbaImage, config: Config) -> String {
             is_same_color_b: 1,
             deepen_diff: config.layer_difference,
             hollow_neighbours: 1,
+            key_color,
+            keying_action: if matches!(config.hierarchical, Hierarchical::Cutout) {
+                KeyingAction::Keep
+            } else {
+                KeyingAction::Discard
+            },
         },
         img,
     );
@@ -78,6 +100,12 @@ pub fn color_image_to_svg(input_image: RgbaImage, config: Config) -> String {
                     is_same_color_b: 1,
                     deepen_diff: 0,
                     hollow_neighbours: 0,
+                    key_color: Color::default(),
+                    keying_action: if matches!(config.hierarchical, Hierarchical::Cutout) {
+                        KeyingAction::Keep
+                    } else {
+                        KeyingAction::Discard
+                    },
                 },
                 image,
             );
