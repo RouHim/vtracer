@@ -223,7 +223,7 @@ impl Config {
             Arg::with_name("path_precision")
                 .long("path_precision")
                 .takes_value(true)
-                .help("Number of deciaml places to use in path string"),
+                .help("Number of decimal places to use in path string"),
         );
 
         // Extract matches
@@ -275,8 +275,8 @@ impl Config {
             if value.trim().parse::<usize>().is_ok() {
                 // is numeric
                 let value = value.trim().parse::<usize>().unwrap();
-                if !(1..=16).contains(&value) {
-                    panic!("Out of Range Error: Filter speckle is invalid at {}. It must be within [1,16].", value);
+                if value > 16 {
+                    panic!("Out of Range Error: Filter speckle is invalid at {}. It must be within [0,16].", value);
                 }
                 config.filter_speckle = value;
             } else {

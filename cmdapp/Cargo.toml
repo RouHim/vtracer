@@ -1,6 +1,6 @@
 [package]
 name = "vtracer"
-version = "0.4.1"
+version = "0.5.1"
 authors = ["Chris Tsang <tyt2y7@gmail.com>"]
 edition = "2021"
 description = "A cmd app to convert images into vector graphics."
@@ -13,4 +13,5 @@ keywords = ["svg", "computer-graphics"]
 [dependencies]
 clap = "3.2.14"
 image = "0.24.3"
-visioncortex = "0.6.1"
+visioncortex = { version = "0.8.0" }
+fastrand = "1.8"

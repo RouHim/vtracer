@@ -63,7 +63,7 @@ OPTIONS:
     -i, --input <input>                          Path to input raster image
     -m, --mode <mode>                            Curver fitting mode `pixel`, `polygon`, `spline`
     -o, --output <output>                        Path to output vector graphics
-        --path_precision <path_precision>        Number of deciaml places to use in path string
+        --path_precision <path_precision>        Number of decimal places to use in path string
         --preset <preset>                        Use one of the preset configs `bw`, `poster`, `photo`
     -l, --segment_length <segment_length>
             Perform iterative subdivide smooth until all segments are shorter than this length
@@ -81,6 +81,31 @@ OPTIONS:
 The library can be found on [crates.io/vtracer](//crates.io/crates/vtracer) and [crates.io/vtracer-webapp](//crates.io/crates/vtracer-webapp).
 
 ## Install
+
+Download pre-built binaries from [Releases](https://github.com/visioncortex/vtracer/releases).
+
+or
+
+Install from source (Rust toolchain needed):
+
 ```
 cargo install vtracer
 ```
+
+## In the wild
+
+VTracer is used by the following products (feel free to add yours to the list):
+
+<table>
+  <tbody>
+    <tr>
+      <td><a href="https://filestar.com"><img src="docs/images/filestar-logo.svg" width="250"/></a>
+      <br>Do anything to any file
+      </td>
+      <td><a href="https://logo.aliyun.com/logo#/name"><img src="docs/images/aliyun-logo.png" width="250"/></a>
+      <br>Smart logo design
+      </td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
