@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 0.6.0 - 2023-09-16
+
+### Python Binding
+
+Thanks to the contribution of [@etjones](https://github.com/etjones), we now have an official Python binding!
+
+https://pypi.org/project/vtracer/0.6.7/
+
 ## 0.5.0 - 2022-10-09
 
 * Handle transparent png images (cli) (#23)

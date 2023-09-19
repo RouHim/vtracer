@@ -12,8 +12,13 @@ mod config;
 mod converter;
 mod inmemory_converter;
 mod svg;
+#[cfg(feature = "python-binding")]
+mod python;
 
 pub use config::*;
 pub use converter::*;
 pub use inmemory_converter::*;
 pub use svg::*;
+
+#[cfg(feature = "python-binding")]
+pub use python::*;
