@@ -1,7 +1,6 @@
 mod config;
 mod converter;
 mod svg;
-use vtracer::{convert_image_to_svg, Config};
 
 fn main() {
     let config = config::Config::from_args();
