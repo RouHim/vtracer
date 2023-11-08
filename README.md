@@ -176,5 +176,5 @@ Rewrite your master branch so that any commits of yours that aren't already in u
 that other branch:
 
 ```bash
-git rebase upstream/master
+git merge upstream/master
 ```
