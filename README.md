@@ -8,14 +8,14 @@
   </p>
 
   <h3>
-    <a href="//www.visioncortex.org/vtracer-docs">Article</a>
+    <a href="https://www.visioncortex.org/vtracer-docs">Article</a>
     <span> | </span>
-    <a href="//www.visioncortex.org/vtracer/">Demo</a>
+    <a href="https://www.visioncortex.org/vtracer/">Demo</a>
     <span> | </span>
-    <a href="//github.com/visioncortex/vtracer/releases/latest">Download</a>
+    <a href="https://github.com/visioncortex/vtracer/releases/latest">Download</a>
   </h3>
 
-<sub>Built with 🦀 by <a href="//www.visioncortex.org/">The Vision Cortex Research Group</a></sub>
+<sub>Built with 🦀 by <a href="https://www.visioncortex.org/">The Vision Cortex Research Group</a></sub>
 </div>
 
 ## Introduction
@@ -24,7 +24,7 @@ visioncortex VTracer is an open source software to convert raster images (like j
 can vectorize graphics and photographs and trace the curves to output compact vector files.
 
 Comparing to [Potrace](http://potrace.sourceforge.net/) which only accept binarized inputs (Black & White pixmap),
-VTracer has an image processing pipeline which can handle colored high resolution scans.
+VTracer has an image processing pipeline which can handle colored high resolution scans. tl;dr: Potrace uses a `O(n^2)` fitting algorithm, whereas `vtracer` is entirely `O(n)`.
 
 Comparing to Adobe Illustrator's [Image Trace](https://helpx.adobe.com/illustrator/using/image-trace.html), VTracer's
 output is much more compact (less shapes) as we adopt a stacking strategy and avoid producing shapes with holes.
@@ -32,7 +32,7 @@ output is much more compact (less shapes) as we adopt a stacking strategy and av
 VTracer is originally designed for processing high resolution scans of historic blueprints up to gigapixels. At the same
 time, VTracer can also handle low resolution pixel art, simulating `image-rendering: pixelated` for retro game artworks.
 
-A technical description of the algorithm is on [visioncortex.org/vtracer-docs](//www.visioncortex.org/vtracer-docs).
+A technical description of the algorithm is on [visioncortex.org/vtracer-docs](https://www.visioncortex.org/vtracer-docs).
 
 ## Web App
 
@@ -47,7 +47,7 @@ applications. The webapp is a perfect showcase of the capability of the Rust + w
 ## Cmd App
 
 ```sh
-visioncortex VTracer 0.4.0
+visioncortex VTracer 0.6.0
 A cmd app to convert images into vector graphics.
 
 USAGE:
@@ -77,32 +77,41 @@ OPTIONS:
     -s, --splice_threshold <splice_threshold>    Minimum angle displacement (degree) to splice a spline
 ```
 
+### Install
+
+You can download pre-built binaries from [Releases](https://github.com/visioncortex/vtracer/releases).
+
+You can also install the program from source from [crates.io/vtracer](https://crates.io/crates/vtracer):
+
+```sh
+cargo install vtracer
+```
+
 ### Usage
 
-```
+```sh
 ./vtracer --input input.jpg --output output.svg
 ```
 
-## Library
+## Rust Library
 
-The library can be found on [crates.io/vtracer](//crates.io/crates/vtracer)
-and [crates.io/vtracer-webapp](//crates.io/crates/vtracer-webapp).
+You can install [`vtracer`](https://crates.io/crates/vtracer) as a Rust library.
 
-## Install
-
-Download pre-built binaries from [Releases](https://github.com/visioncortex/vtracer/releases).
-
-or
-
-Install from source (Rust toolchain needed):
-
+```sh
+cargo add vtracer
 ```
-cargo install vtracer
+
+## Python Library
+
+Since `0.6`, [`vtracer`](https://pypi.org/project/vtracer/) is also packaged as Python native extensions, thanks to the awesome [pyo3](https://github.com/PyO3/pyo3) project.
+
+```sh
+pip install vtracer
 ```
 
 ## In the wild
 
-VTracer is used by the following products (feel free to add yours to the list):
+VTracer is used by the following projects (feel free to add yours!):
 
 <table>
   <tbody>
@@ -114,6 +123,34 @@ VTracer is used by the following products (feel free to add yours to the list):
     </tr>
   </tbody>
 </table>
+
+## Anecdotes
+
+> The following content is an excerpt from my [unpublished](https://github.com/sponsors/tyt2y3) [memoir](https://github.com/visioncortex/memoir).
+
+### How / when / where did VTracer come about?
+
+At my teenage, two open source projects in the vector graphics space inspired me the most: Potrace and Anti-Grain Geometry (AGG).
+
+Many years later, in 2020, I was developing a video processing engine. And it became evident that it requires way more investment to be commercially viable. So before abandoning the project, I wanted to publish *something* as open-source for posterity. At that time, I already developed a prototype vector graphics tracer. It can convert high-resolution scans of hand-drawn blueprints into vectors. But it can only process black and white images, and can only output polygons, not splines.
+
+The plan was to fully develop the vectorizer: to handle color images and output splines. I recruited a very talented intern, [@shpun817](https://github.com/shpun817), to work on VTracer. I grafted the frontend of the video processing engine - the ["The Clustering Algorithm"](https://www.visioncortex.org/impression-docs#the-clustering-algorithm) as the pre-processor.
+
+Three months later, we published the first version on Reddit. Out of my surprise, the response of such an underwhelming project was overwhelming.
+
+## What's next?
+
+There are several things in my mind:
+
+1. Path simplification. Implement a post-process filter to the output paths to further reduce the number of splines.
+
+2. Perfect cut-out mode. Right now in cut-out mode, the shapes do not share boundaries perfectly, but have seams.
+
+3. Pencil tracing. Instead of tracing shapes as closed paths, may be we can attempt to skeletonize the shapes as open paths. The output would be clean, fixed width strokes.
+
+4. Image cleaning. Right now the tracer works best on losslessly compressed pngs. If an image suffered from jpeg noises, it could impact the tracing quality. We might be able to develop a pre-filtering pass that denoises the input.
+
+If you are interested in working on them or willing to sponsor its development, feel free to get in touch.
 
 ## How to sync with the upstream repo
 

@@ -13,9 +13,13 @@ keywords = ["svg", "computer-graphics"]
 [dependencies]
 clap = "3.2.14"
 image = "0.24.3"
-visioncortex = { version = "0.8.0" }
+visioncortex = { version = "0.8.1" }
 fastrand = "1.8"
 pyo3 = { version = "0.19.0", optional = true }
 
 [features]
 python-binding = ["pyo3"]
+
+[lib]
+name = "vtracer"
+crate-type = ["rlib", "cdylib"]
