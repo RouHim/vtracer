@@ -10,9 +10,9 @@
   <h3>
     <a href="https://www.visioncortex.org/vtracer-docs">Article</a>
     <span> | </span>
-    <a href="https://www.visioncortex.org/vtracer/">Demo</a>
+    <a href="https://www.visioncortex.org/vtracer/">Web App</a>
     <span> | </span>
-    <a href="https://github.com/visioncortex/vtracer/releases/latest">Download</a>
+    <a href="https://github.com/visioncortex/vtracer/releases">Download</a>
   </h3>
 
 <sub>Built with 🦀 by <a href="https://www.visioncortex.org/">The Vision Cortex Research Group</a></sub>
@@ -32,7 +32,7 @@ output is much more compact (less shapes) as we adopt a stacking strategy and av
 VTracer is originally designed for processing high resolution scans of historic blueprints up to gigapixels. At the same
 time, VTracer can also handle low resolution pixel art, simulating `image-rendering: pixelated` for retro game artworks.
 
-A technical description of the algorithm is on [visioncortex.org/vtracer-docs](https://www.visioncortex.org/vtracer-docs).
+Technical descriptions of the [tracing algorithm](https://www.visioncortex.org/vtracer-docs) and [clustering algorithm](https://www.visioncortex.org/impression-docs).
 
 ## Web App
 
@@ -77,7 +77,7 @@ OPTIONS:
     -s, --splice_threshold <splice_threshold>    Minimum angle displacement (degree) to splice a spline
 ```
 
-### Install
+## Downloads
 
 You can download pre-built binaries from [Releases](https://github.com/visioncortex/vtracer/releases).
 
@@ -87,13 +87,15 @@ You can also install the program from source from [crates.io/vtracer](https://cr
 cargo install vtracer
 ```
 
+> You are strongly advised to not download from any other third-party sources 
+
 ### Usage
 
 ```sh
 ./vtracer --input input.jpg --output output.svg
 ```
 
-## Rust Library
+### Rust Library
 
 You can install [`vtracer`](https://crates.io/crates/vtracer) as a Rust library.
 
@@ -101,7 +103,7 @@ You can install [`vtracer`](https://crates.io/crates/vtracer) as a Rust library.
 cargo add vtracer
 ```
 
-## Python Library
+### Python Library
 
 Since `0.6`, [`vtracer`](https://pypi.org/project/vtracer/) is also packaged as Python native extensions, thanks to the awesome [pyo3](https://github.com/PyO3/pyo3) project.
 
@@ -111,7 +113,7 @@ pip install vtracer
 
 ## In the wild
 
-VTracer is used by the following projects (feel free to add yours!):
+VTracer is used by the following products (open a PR to add yours):
 
 <table>
   <tbody>
@@ -124,11 +126,17 @@ VTracer is used by the following projects (feel free to add yours!):
   </tbody>
 </table>
 
-## Anecdotes
+## Citations
 
-> The following content is an excerpt from my [unpublished](https://github.com/sponsors/tyt2y3) [memoir](https://github.com/visioncortex/memoir).
+VTracer has since been cited in a few academic papers. Please kindly let us know if you have cited our work:
 
-### How / when / where did VTracer come about?
++ [Framework to Vectorize Digital Artworks for Physical Fabrication based on Geometric Stylization Techniques](https://www.researchgate.net/publication/374448489_Framework_to_Vectorize_Digital_Artworks_for_Physical_Fabrication_based_on_Geometric_Stylization_Techniques)
++ [Image Vectorization: a Review](https://arxiv.org/pdf/2306.06441.pdf)
++ [StarVector: Generating Scalable Vector Graphics Code from Images](https://arxiv.org/abs/2312.11556)
+
+## How did VTracer come about?
+
+> The following content is an excerpt from my [unpublished memoir](https://github.com/visioncortex/memoir).
 
 At my teenage, two open source projects in the vector graphics space inspired me the most: Potrace and Anti-Grain Geometry (AGG).
 

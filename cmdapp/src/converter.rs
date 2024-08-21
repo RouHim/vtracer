@@ -1,6 +1,8 @@
-use std::path::PathBuf;
+use std::path::Path;
 use std::{fs::File, io::Write};
 
+use super::config::{ColorMode, Config, ConverterConfig, Hierarchical};
+use super::svg::SvgFile;
 use fastrand::Rng;
 use visioncortex::color_clusters::{KeyingAction, Runner, RunnerConfig, HIERARCHICAL_MAX};
 use visioncortex::{Color, ColorImage, ColorName};
@@ -13,13 +15,24 @@ const NUM_UNUSED_COLOR_ITERATIONS: usize = 6;
 /// the entire image will be keyed.
 const KEYING_THRESHOLD: f32 = 0.2;
 
-/// Convert an image file into svg file
-pub fn convert_image_to_svg(config: Config) -> Result<(), String> {
+/// Convert an in-memory image into an in-memory SVG
+pub fn convert(img: ColorImage, config: Config) -> Result<SvgFile, String> {
     let config = config.into_converter_config();
     match config.color_mode {
-        ColorMode::Color => color_image_to_svg(config),
-        ColorMode::Binary => binary_image_to_svg(config),
+        ColorMode::Color => color_image_to_svg(img, config),
+        ColorMode::Binary => binary_image_to_svg(img, config),
     }
+}
+
+/// Convert an image file into svg file
+pub fn convert_image_to_svg(
+    input_path: &Path,
+    output_path: &Path,
+    config: Config,
+) -> Result<(), String> {
+    let img = read_image(input_path)?;
+    let svg = convert(img, config)?;
+    write_svg(svg, output_path)
 }
 
 fn color_exists_in_image(img: &ColorImage, color: Color) -> bool {
@@ -63,7 +76,7 @@ pub fn should_key_image(img: &ColorImage) -> bool {
 
     // Check for transparency at several scanlines
     let threshold = ((img.width * 2) as f32 * KEYING_THRESHOLD) as usize;
-    let mut num_transparent_boundary_pixels = 0;
+    let mut num_transparent_pixels = 0;
     let y_positions = [
         0,
         img.height / 4,
@@ -74,9 +87,9 @@ pub fn should_key_image(img: &ColorImage) -> bool {
     for y in y_positions {
         for x in 0..img.width {
             if img.get_pixel(x, y).a == 0 {
-                num_transparent_boundary_pixels += 1;
+                num_transparent_pixels += 1;
             }
-            if num_transparent_boundary_pixels >= threshold {
+            if num_transparent_pixels >= threshold {
                 return true;
             }
         }
@@ -85,16 +98,9 @@ pub fn should_key_image(img: &ColorImage) -> bool {
     false
 }
 
-fn color_image_to_svg(config: ConverterConfig) -> Result<(), String> {
-    let (mut img, width, height);
-    match read_image(config.input_path) {
-        Ok(values) => {
-            img = values.0;
-            width = values.1;
-            height = values.2;
-        }
-        Err(msg) => return Err(msg),
-    }
+fn color_image_to_svg(mut img: ColorImage, config: ConverterConfig) -> Result<SvgFile, String> {
+    let width = img.width;
+    let height = img.height;
 
     let key_color = if should_key_image(&img) {
         let key_color = find_unused_color_in_image(&img)?;
@@ -176,20 +182,13 @@ fn color_image_to_svg(config: ConverterConfig) -> Result<(), String> {
         svg.add_path(paths, cluster.residue_color());
     }
 
-    write_svg(svg, config.output_path)
+    Ok(svg)
 }
 
-fn binary_image_to_svg(config: ConverterConfig) -> Result<(), String> {
-    let (img, width, height);
-    match read_image(config.input_path) {
-        Ok(values) => {
-            img = values.0;
-            width = values.1;
-            height = values.2;
-        }
-        Err(msg) => return Err(msg),
-    }
+fn binary_image_to_svg(img: ColorImage, config: ConverterConfig) -> Result<SvgFile, String> {
     let img = img.to_binary_image(|x| x.r < 128);
+    let width = img.width;
+    let height = img.height;
 
     let clusters = img.to_clusters(false);
 
@@ -208,10 +207,10 @@ fn binary_image_to_svg(config: ConverterConfig) -> Result<(), String> {
         }
     }
 
-    write_svg(svg, config.output_path)
+    Ok(svg)
 }
 
-fn read_image(input_path: PathBuf) -> Result<(ColorImage, usize, usize), String> {
+fn read_image(input_path: &Path) -> Result<ColorImage, String> {
     let img = image::open(input_path);
     let img = match img {
         Ok(file) => file.to_rgba8(),
@@ -225,10 +224,10 @@ fn read_image(input_path: PathBuf) -> Result<(ColorImage, usize, usize), String>
         height,
     };
 
-    Ok((img, width, height))
+    Ok(img)
 }
 
-pub fn write_svg(svg: SvgFile, output_path: PathBuf) -> Result<(), String> {
+pub fn write_svg(svg: SvgFile, output_path: &Path) -> Result<(), String> {
     let out_file = File::create(output_path);
     let mut out_file = match out_file {
         Ok(file) => file,
