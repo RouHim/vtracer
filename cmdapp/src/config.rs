@@ -146,7 +146,7 @@ impl Config {
         }
     }
 
-    pub(crate) fn into_converter_config(self) -> ConverterConfig {
+    pub fn into_converter_config(self) -> ConverterConfig {
         ConverterConfig {
             color_mode: self.color_mode,
             hierarchical: self.hierarchical,
