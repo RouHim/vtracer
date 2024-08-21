@@ -1,10 +1,4 @@
-use wasm_bindgen::prelude::*;
-use visioncortex::{Color, ColorImage, PathSimplifyMode};
-use visioncortex::color_clusters::{Clusters, Runner, RunnerConfig, HIERARCHICAL_MAX, IncrementalBuilder, KeyingAction};
-use visioncortex::color_clusters::{
-    Clusters, IncrementalBuilder, Runner, RunnerConfig, HIERARCHICAL_MAX,
-};
-use visioncortex::PathSimplifyMode;
+use visioncortex::color_clusters::{Clusters, IncrementalBuilder, KeyingAction, Runner, RunnerConfig, HIERARCHICAL_MAX};
 use wasm_bindgen::prelude::*;
 
 use crate::canvas::*;
@@ -12,6 +6,7 @@ use crate::svg::*;
 
 use super::util;
 use serde::Deserialize;
+use visioncortex::{Color, ColorImage, PathSimplifyMode};
 
 const KEYING_THRESHOLD: f32 = 0.2;
 

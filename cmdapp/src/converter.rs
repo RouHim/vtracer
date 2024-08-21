@@ -7,9 +7,6 @@ use fastrand::Rng;
 use visioncortex::color_clusters::{KeyingAction, Runner, RunnerConfig, HIERARCHICAL_MAX};
 use visioncortex::{Color, ColorImage, ColorName};
 
-use super::config::{ColorMode, Config, ConverterConfig, Hierarchical};
-use super::svg::SvgFile;
-
 const NUM_UNUSED_COLOR_ITERATIONS: usize = 6;
 /// The fraction of pixels in the top/bottom rows of the image that need to be transparent before
 /// the entire image will be keyed.

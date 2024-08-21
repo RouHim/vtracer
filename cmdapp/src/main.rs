@@ -2,11 +2,14 @@ mod config;
 mod converter;
 mod svg;
 
+use std::iter::Filter;
 use clap::{App, Arg};
 use config::{ColorMode, Config, Hierarchical, Preset};
 use std::path::PathBuf;
 use std::str::FromStr;
-use visioncortex::PathSimplifyMode;
+use std::sync::mpsc::channel;
+use image::codecs::pnm::ArbitraryTuplType::RGB;
+use visioncortex::{Color, PathSimplifyMode};
 
 fn path_simplify_mode_from_str(s: &str) -> PathSimplifyMode {
     match s {
@@ -24,7 +27,7 @@ pub fn config_from_args() -> (PathBuf, PathBuf, Config) {
     let app = app.arg(
         Arg::with_name("input")
             .long("input")
-            .short("i")
+            .short('i')
             .takes_value(true)
             .help("Path to input raster image")
             .required(true),
@@ -33,7 +36,7 @@ pub fn config_from_args() -> (PathBuf, PathBuf, Config) {
     let app = app.arg(
         Arg::with_name("output")
             .long("output")
-            .short("o")
+            .short('o')
             .takes_value(true)
             .help("Path to output vector graphics")
             .required(true),
@@ -66,7 +69,7 @@ pub fn config_from_args() -> (PathBuf, PathBuf, Config) {
     let app = app.arg(
         Arg::with_name("filter_speckle")
             .long("filter_speckle")
-            .short("f")
+            .short('f')
             .takes_value(true)
             .help("Discard patches smaller than X px in size"),
     );
@@ -74,7 +77,7 @@ pub fn config_from_args() -> (PathBuf, PathBuf, Config) {
     let app = app.arg(
         Arg::with_name("color_precision")
             .long("color_precision")
-            .short("p")
+            .short('p')
             .takes_value(true)
             .help("Number of significant bits to use in an RGB channel"),
     );
@@ -82,7 +85,7 @@ pub fn config_from_args() -> (PathBuf, PathBuf, Config) {
     let app = app.arg(
         Arg::with_name("gradient_step")
             .long("gradient_step")
-            .short("g")
+            .short('g')
             .takes_value(true)
             .help("Color difference between gradient layers"),
     );
@@ -90,21 +93,21 @@ pub fn config_from_args() -> (PathBuf, PathBuf, Config) {
     let app = app.arg(
         Arg::with_name("corner_threshold")
             .long("corner_threshold")
-            .short("c")
+            .short('c')
             .takes_value(true)
             .help("Minimum momentary angle (degree) to be considered a corner"),
     );
 
     let app = app.arg(Arg::with_name("segment_length")
         .long("segment_length")
-        .short("l")
+        .short('l')
         .takes_value(true)
         .help("Perform iterative subdivide smooth until all segments are shorter than this length"));
 
     let app = app.arg(
         Arg::with_name("splice_threshold")
             .long("splice_threshold")
-            .short("s")
+            .short('s')
             .takes_value(true)
             .help("Minimum angle displacement (degree) to splice a spline"),
     );
@@ -112,7 +115,7 @@ pub fn config_from_args() -> (PathBuf, PathBuf, Config) {
     let app = app.arg(
         Arg::with_name("mode")
             .long("mode")
-            .short("m")
+            .short('m')
             .takes_value(true)
             .help("Curver fitting mode `pixel`, `polygon`, `spline`"),
     );
